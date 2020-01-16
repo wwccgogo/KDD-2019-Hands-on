@@ -32,7 +32,7 @@ class MovieLens(object):
 
         data = {'id': int(id_), 'title': title, 'year': year}
         for i, g in enumerate(genres):
-            data['genre' + str(i)] = (g != 0)
+            data['genre' + str(i)] = (g != "0") #fix bug
         return data
     
     def read_rating_line(self, l):
@@ -178,7 +178,8 @@ class MovieLens(object):
         # bag-of-words
         g.ndata['title'] = torch.zeros(g.number_of_nodes(), len(vocab))
         for i, tw in enumerate(tqdm.tqdm(title_words)):
-            g.ndata['title'][i, [vocab_invmap[w] for w in tw]] = 1
+            #add padding for users
+            g.ndata['title'][i+len(user_ids), [vocab_invmap[w] for w in tw]] = 1
         self.vocab = vocab
         self.vocab_invmap = vocab_invmap
         
